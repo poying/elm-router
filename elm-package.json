@@ -1,0 +1,17 @@
+{
+    "version": "1.0.0",
+    "summary": "Elm module for single page app routing",
+    "repository": "https://github.com/poying/elm-router.git",
+    "license": "MIT",
+    "source-directories": [
+        "src"
+    ],
+    "exposed-modules": [
+        "Router",
+        "Router.Parameter"
+    ],
+    "dependencies": {
+        "elm-lang/core": "3.0.0 <= v < 4.0.0"
+    },
+    "elm-version": "0.16.0 <= v < 0.17.0"
+}

@@ -24,18 +24,18 @@ router =
   [ "/" :~> always Home
   , "/user/:uid/article/:aid" :~> always Article /: string "uid" /: int "aid"
   -- nested router
-  , "/admin" :=> adminRouter
+  , "/admin/:uid" :=> adminRouter
   ]
 
 
 adminRouter =
-  [ "/" :~> always AdminHome
+  [ "/a/:aid" :~> always Article /: string "uid" /: int "aid"
   ]
 
 
 main =
   show <|
-    case match "/user/poying/article/123" of
+    case match "/admin/poying/a/123" of
       Home -> "Home"
       AdminHome -> "AdminHome"
       Article uid aid -> "Article " ++ uid  ++ " " ++ toString aid

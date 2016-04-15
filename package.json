@@ -1,0 +1,22 @@
+{
+  "name": "elm-router",
+  "version": "1.0.0",
+  "description": "elm-router ==========",
+  "main": "index.js",
+  "scripts": {
+    "test": "sloth --root $(PWD)/test ./test/*.elm"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/poying/elm-router.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/poying/elm-router/issues"
+  },
+  "homepage": "https://github.com/poying/elm-router#readme",
+  "devDependencies": {
+    "sloth.elm": "^1.0.0"
+  }
+}

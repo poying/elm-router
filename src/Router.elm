@@ -87,7 +87,7 @@ type Result a
 
 route : String -> Result a -> Route a
 route urlPath result =
-  (compile urlPath, result)
+  (compile urlPath result, result)
 
 
 {-|
@@ -146,41 +146,44 @@ matchRouter params router urlPath =
 matchRoute : Parameters -> String -> Route a -> Maybe a
 matchRoute params urlPath ((names, (matchPathRe, getSuffixRe)), result) =
   let
-    match = Regex.find Regex.All matchPathRe urlPath
-    values = match
-      |> List.filterMap (\{submatches} -> Maybe.withDefault Nothing (List.head submatches))
+    match = List.head <| Regex.find Regex.All matchPathRe urlPath
+    values = case match of
+      Just {submatches} -> submatches |> List.filterMap identity
+      Nothing -> []
     suffix = Regex.replace Regex.All getSuffixRe (\_ -> "") urlPath
+    newParams =
+      List.map2 (,) names values
+        |> Dict.fromList
+        |> Dict.union params
   in
     case result of
       Page fn ->
-        if List.length match > 0 then
-          List.map2 (,) names values
-            |> Dict.fromList
-            |> Dict.union params
-            |> fn
-            |> Just
+        if match /= Nothing then
+          Just <| fn newParams
         else
           Nothing
       NestRouter router ->
         if suffix /= urlPath then
-          matchRouter params router suffix
+          matchRouter newParams router suffix
         else
           Nothing
 
 
-compile : String -> (List String, (Regex, Regex))
-compile path =
-  (path2names path, path2re path)
+compile : String -> Result a -> (List String, (Regex, Regex))
+compile path result =
+  (path2names path, path2re path result)
 
 
-path2re : String -> (Regex, Regex)
-path2re path =
+path2re : String -> Result a -> (Regex, Regex)
+path2re path result =
   let
     re = path
       |> removeTailSlash
       |> Regex.replace Regex.All (Regex.regex "/:[^/]+") (\_ -> "/([^/]+)")
-    matchPathRe = Regex.regex <| "^" ++ re ++ "$"
     getSuffixRe = Regex.regex <| "^" ++ re
+    matchPathRe = case result of
+      Page _ -> Regex.regex <| "^" ++ re ++ "$"
+      NestRouter _ -> getSuffixRe
   in
     (matchPathRe, getSuffixRe)
 

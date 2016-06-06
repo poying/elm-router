@@ -1,8 +1,4 @@
-module Router
-  ( Router
-  , match, (:~>), (:=>)
-  )
-  where
+module Router exposing (Router, match, (:~>), (:=>))
 
 
 {-| Elm module for single page app routing

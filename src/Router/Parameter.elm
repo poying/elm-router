@@ -1,6 +1,4 @@
-module Router.Parameter
-  ((/:), int, float, string)
-  where
+module Router.Parameter exposing ((/:), int, float, string)
 
 
 {-|
